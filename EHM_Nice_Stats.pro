@@ -35,22 +35,21 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     settings.cpp \
+    stats/base_class/player.cpp \
     stats/club.cpp \
+    stats/container/skater_container.cpp \
     stats/ice_time.cpp \
-    stats/manager.cpp \
-    stats/player.cpp \
-    stats/player/skater_stats.cpp
+    stats/skater.cpp \
+    stats/stats_manager.cpp
 
 HEADERS += \
     mainwindow.h \
     settings.h \
+    stats/base_class/player.h \
     stats/base_class/schema_base_class.h \
     stats/club.h \
+    stats/container/skater_container.h \
     stats/ice_time.h \
-    stats/manager.h \
-    stats/player.h \
-    stats/player/player_stats_base_class.h \
-    stats/player/skater_stats.h \
     stats/qxlsx/include/xlsxabstractooxmlfile.h \
     stats/qxlsx/include/xlsxabstractooxmlfile_p.h \
     stats/qxlsx/include/xlsxabstractsheet.h \
@@ -97,7 +96,9 @@ HEADERS += \
     stats/qxlsx/include/xlsxworksheet.h \
     stats/qxlsx/include/xlsxworksheet_p.h \
     stats/qxlsx/include/xlsxzipreader_p.h \
-    stats/qxlsx/include/xlsxzipwriter_p.h
+    stats/qxlsx/include/xlsxzipwriter_p.h \
+    stats/skater.h \
+    stats/stats_manager.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

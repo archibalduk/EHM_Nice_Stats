@@ -1,8 +1,8 @@
-#include "manager.h"
+#include "stats_manager.h"
 
 // Application headers
 #include "club.h"
-#include "player.h"
+#include "container/skater_container.h"
 
 // Xlsx headers
 #include "xlsxdocument.h"
@@ -12,16 +12,16 @@
 
 using namespace stats;
 
-struct Manager::Data
+struct StatsManager::Data
 {
     std::vector<std::shared_ptr<Club>> clubs_;
-    std::vector<Player> players_;
 };
 
-Manager::Manager(const QString &club_stats_input_path,
-                 const QString &player_stats_input_path,
-                 const QString &output_file_path)
+StatsManager::StatsManager(const QString &club_stats_input_path,
+                           const QString &player_stats_input_path,
+                           const QString &output_file_path)
     : data_(std::make_unique<Data>())
+    , skaters_(std::make_unique<SkaterContainer>())
     , club_stats_input_path_(club_stats_input_path)
     , player_stats_input_path_(player_stats_input_path)
     , output_file_path_(output_file_path)
@@ -29,9 +29,9 @@ Manager::Manager(const QString &club_stats_input_path,
     
 }
 
-Manager::~Manager() {}
+StatsManager::~StatsManager() {}
 
-bool Manager::generate()
+bool StatsManager::generate()
 {
     if (!parse())
         return false;
@@ -42,18 +42,18 @@ bool Manager::generate()
     return true;
 }
 
-bool Manager::parse()
+bool StatsManager::parse()
 {
     if (!Club::parseFile(club_stats_input_path_, data_->clubs_))
         return false;
 
-    if (!Player::parseFile(player_stats_input_path_, data_->players_, data_->clubs_))
+    if (!skaters_->parseFile(player_stats_input_path_, data_->clubs_))
         return false;
 
     return true;
 }
 
-bool Manager::saveSpreadsheet()
+bool StatsManager::saveSpreadsheet()
 {
     QXlsx::Document xlsx;
 
@@ -65,7 +65,7 @@ bool Manager::saveSpreadsheet()
     sorted_club_list.push_back(nullptr);
 
     for (const auto &itr : sorted_club_list)
-        Player::writeToSpreadsheet(xlsx, data_->players_, itr);
+        skaters_->writeToSpreadsheet(xlsx, itr);
 
     return xlsx.saveAs(output_file_path_);
 }

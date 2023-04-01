@@ -2,7 +2,7 @@
 
 // Application headers
 #include "settings.h"
-#include "stats/manager.h"
+#include "stats/stats_manager.h"
 
 // Qt headers
 #include <QCoreApplication>
@@ -120,7 +120,7 @@ void MainWindow::generate()
         || output_file_->text().isEmpty())
         return;
 
-    stats::Manager nice_stats(club_stats_path_->text(),
+    stats::StatsManager nice_stats(club_stats_path_->text(),
                               player_stats_path_->text(),
                               output_file_->text());
     if (nice_stats.generate())

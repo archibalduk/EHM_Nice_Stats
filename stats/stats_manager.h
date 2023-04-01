@@ -1,5 +1,5 @@
-#ifndef MANAGER_H
-#define MANAGER_H
+#ifndef STATS_MANAGER_H
+#define STATS_MANAGER_H
 
 // Qt headers
 #include <QString>
@@ -7,17 +7,19 @@
 
 namespace stats {
 
+class SkaterContainer;
+
 /*!
- * \brief The Manager class is the statistics manager/database. 
+ * \brief The StatsManager class is the statistics manager/database. 
  * It manages file i/o and stats generation.
  */
-class Manager
+class StatsManager
 {
 public:
-    Manager(const QString &club_stats_input_path,
-            const QString &player_stats_input_path,
-            const QString &output_file_path);
-    ~Manager();
+    StatsManager(const QString &club_stats_input_path,
+                 const QString &player_stats_input_path,
+                 const QString &output_file_path);
+    ~StatsManager();
 
     /*!
      * \brief Generate the statistics
@@ -29,6 +31,7 @@ private:
     // Club and player data
     struct Data;
     std::unique_ptr<Data> data_;
+    std::unique_ptr<SkaterContainer> skaters_;
 
     // File paths
     QString club_stats_input_path_;
@@ -48,4 +51,4 @@ private:
 };
 } // namespace stats
 
-#endif // MANAGER_H
+#endif // STATS_MANAGER_H
