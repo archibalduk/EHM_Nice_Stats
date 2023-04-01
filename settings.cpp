@@ -3,7 +3,6 @@
 // Qt headers
 #include <QFileInfo>
 #include <QSettings>
-#include <QString>
 
 Settings::Settings()
 {

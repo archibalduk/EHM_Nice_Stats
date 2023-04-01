@@ -7,6 +7,7 @@
 
 namespace stats {
 
+class ClubContainer;
 class SkaterContainer;
 
 /*!
@@ -29,8 +30,7 @@ public:
 
 private:
     // Club and player data
-    struct Data;
-    std::unique_ptr<Data> data_;
+    std::unique_ptr<ClubContainer> clubs_;
     std::unique_ptr<SkaterContainer> skaters_;
 
     // File paths

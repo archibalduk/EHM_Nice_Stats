@@ -3,13 +3,6 @@
 // Xlsx headers
 #include "xlsxdocument.h"
 
-// Qt headers
-#include <QDebug>
-#include <QFile>
-#include <QHash>
-#include <QTextStream>
-#include <execution>
-
 using namespace stats;
 
 /* ==================== */
@@ -38,33 +31,9 @@ void Club::write(QXlsx::Document &xlsx, const qint32 row) const
     xlsx.write(row, OUT_PTS, points_);
 }
 
-void Club::writeToSpreadsheet(QXlsx::Document &xlsx, std::vector<std::shared_ptr<Club>> &data)
-{
-    xlsx.addSheet(QStringLiteral("Club stats"));
-
-    auto row{1};
-
-    for (auto column = 1; column < OUTPUT_COLUMNS_END_POS; ++column)
-        xlsx.write(row, column, columnName(column));
-
-    for (const auto &itr : data)
-        itr->write(xlsx, ++row);
-}
-
 /* ================== */
 /*      Get Data      */
 /* ================== */
-
-QHash<QString, qint32> Club::hash(const std::vector<std::shared_ptr<Club>> &data)
-{
-    QHash<QString, qint32> h;
-
-    const auto size{static_cast<qint32>(data.size())};
-    for (auto i = 0; i < size; ++i)
-        h.insert(data[i]->name_, i);
-
-    return h;
-}
 
 QString Club::columnName(const qint32 xlsx_column)
 {
@@ -97,17 +66,6 @@ QString Club::columnName(const qint32 xlsx_column)
 /*      Parse Data      */
 /* ==================== */
 
-qint64 Club::findLeagueStandings(QTextStream &in)
-{
-    QString line;
-    while (in.readLineInto(&line)) { // The standings table begins with "Pos     Team"
-        if (line.startsWith(QStringLiteral("Pos     Team"), Qt::CaseInsensitive))
-            return in.pos();
-    }
-
-    return no_result_;
-}
-
 bool Club::parse(QString &line)
 {
     // Club Name
@@ -139,52 +97,6 @@ bool Club::parse(QString &line)
     points_ = stats_list[IN_PTS].toUShort();
 
     return true;
-}
-
-bool Club::parseFile(const QString &file_path, std::vector<std::shared_ptr<Club>> &data)
-{
-    QFile f(file_path);
-    if (!f.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qCritical().noquote() << QStringLiteral("Unable to open club stats file: ") << file_path;
-        return false;
-    }
-
-    QTextStream in(&f);
-
-    // Locate the league standings/stats and parse each row
-    while (findLeagueStandings(in) != no_result_)
-        parseLeagueStandings(in, data);
-
-    // Sort the data
-    std::sort(/*std::execution::par,*/ data.begin(), data.end(), Club::sortByPerformance);
-
-    qInfo().noquote() << QStringLiteral("Total clubs parsed: %L1").arg(data.size());
-    return true;
-}
-
-std::vector<std::shared_ptr<Club>> Club::alphabeticalCopy(
-    const std::vector<std::shared_ptr<Club>> &data)
-{
-    std::vector<std::shared_ptr<Club>> copy{data};
-    std::sort(/*std::execution::par,*/ copy.begin(), copy.end(), Club::sortByName);
-
-    return copy;
-}
-
-void Club::parseLeagueStandings(QTextStream &in, std::vector<std::shared_ptr<Club>> &data)
-{
-    QString line;
-    while (in.readLineInto(&line)) {
-        if (line.startsWith(QStringLiteral("---"), Qt::CaseInsensitive))
-            continue; // Ignore end place separators
-        else if (line.isEmpty())
-            return; // A blank line denotes the end of the standings
-
-        auto club{std::make_shared<Club>()};
-
-        if (club->parse(line))
-            data.push_back(std::move(club));
-    }
 }
 
 /* =================== */

@@ -3,6 +3,7 @@
 
 // Application headers
 #include "../skater.h"
+#include "container_base_class.h"
 
 // Qt headers
 class QTextStream;
@@ -13,8 +14,10 @@ class Document;
 }
 
 namespace stats {
+class ClubContainer;
+
 /*! The SkaterContainer class is a container for skater stats */
-class SkaterContainer
+class SkaterContainer : public ContainerBaseClass
 {
 public:
     SkaterContainer();
@@ -25,7 +28,7 @@ public:
 
     //! Parse data */
     /*! Open and parse a player stats file */
-    bool parseFile(const QString &file_path, const std::vector<std::shared_ptr<Club>> &clubs);
+    bool parseFile(const QString &file_path, const ClubContainer *clubs);
 
 private:
     // Data
@@ -33,9 +36,7 @@ private:
 
     //! Parse data */
     /*! Find the file position of the player stats section of a file */
-    qint64 findPlayerStats(QTextStream &in);
-
-    static constexpr qint64 no_result_{-1};
+    qint64 findPositionInFile(QTextStream &in) override;
 };
 } // namespace stats
 #endif // SKATER_CONTAINER_H

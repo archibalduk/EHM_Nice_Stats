@@ -2,8 +2,10 @@
 
 // Application headers
 #include "../club.h"
+#include "club_container.h"
 
 // Xlsx headers
+#include "stats/container/club_container.h"
 #include "xlsxdocument.h"
 
 // Qt headers
@@ -47,8 +49,7 @@ void SkaterContainer::writeToSpreadsheet(QXlsx::Document &xlsx, const std::share
 /*      Parse Data      */
 /* ==================== */
 
-bool stats::SkaterContainer::parseFile(const QString &file_path,
-                                       const std::vector<std::shared_ptr<Club>> &clubs)
+bool stats::SkaterContainer::parseFile(const QString &file_path, const ClubContainer *clubs)
 {
     QFile f(file_path);
     if (!f.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -59,13 +60,13 @@ bool stats::SkaterContainer::parseFile(const QString &file_path,
     QTextStream in(&f);
 
     // Locate the start of the stats and parse each row
-    if (!findPlayerStats(in)) {
+    if (!findPositionInFile(in)) {
         qCritical().noquote() << QStringLiteral("Unable to find any player stats within")
                               << file_path;
         return false;
     }
 
-    const auto club_hash_table{Club::hash(clubs)};
+    const auto club_hash_table{clubs->hash()};
 
     // Parse each line
     QString line;
@@ -86,7 +87,7 @@ bool stats::SkaterContainer::parseFile(const QString &file_path,
     return true;
 }
 
-qint64 SkaterContainer::findPlayerStats(QTextStream &in)
+qint64 SkaterContainer::findPositionInFile(QTextStream &in)
 {
     QString line;
     while (in.readLineInto(&line)) { // The stats table begins with "Name,Team,Pos"

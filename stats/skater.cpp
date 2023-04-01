@@ -2,6 +2,7 @@
 
 // Application headers
 #include "club.h"
+#include "container/club_container.h"
 
 // Xlsx headers
 #include "xlsxdocument.h"
@@ -9,7 +10,6 @@
 // Qt headers
 #include <QDebug>
 #include <QFile>
-#include <execution>
 
 using namespace stats;
 
@@ -261,7 +261,7 @@ QString Skater::columnName(const qint32 xlsx_column)
 /* ==================== */
 
 bool Skater::parse(QString &line,
-                   const std::vector<std::shared_ptr<Club>> &clubs,
+                   const ClubContainer *clubs,
                    const QHash<QString, qint32> &club_hash_table)
 {
     const auto stats_list{line.split(",", Qt::SkipEmptyParts, Qt::CaseInsensitive)};
@@ -282,7 +282,7 @@ bool Skater::parse(QString &line,
     // Club
     const auto club_id = club_hash_table.value(stats_list[IN_CLUB], static_cast<qint32>(no_result_));
     if (club_id != static_cast<qint32>(no_result_))
-        club_ = clubs[club_id];
+        club_ = clubs->get(club_id);
 
     // Stats
     gp_ = stats_list[IN_GP].toUShort();

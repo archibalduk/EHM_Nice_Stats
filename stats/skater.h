@@ -11,13 +11,11 @@ class Document;
 }
 
 // Qt headers
-#include <QString>
 #include <memory>
-#include <vector>
 
 namespace stats {
 
-class Club;
+class ClubContainer;
 
 /*! The Skater class contains statistics for a skater */
 class Skater : public Player
@@ -39,7 +37,7 @@ public:
     //! Parse data */
     /*! Parse skater stats from a line of a text file */
     bool parse(QString &line,
-               const std::vector<std::shared_ptr<Club>> &clubs,
+               const ClubContainer *clubs,
                const QHash<QString, qint32> &club_hash_table);
 
     enum ENUM_STATS_OUTPUT_COLUMNS {
