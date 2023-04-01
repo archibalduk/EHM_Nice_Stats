@@ -15,7 +15,11 @@ class SchemaBaseClass
 {
 public:
     SchemaBaseClass() {}
-    ~SchemaBaseClass() {}
+    virtual ~SchemaBaseClass() {}
+
+    //! Get data
+    /*! Get item name */
+    inline QString name() const { return name_; }
 
 protected:
     // Data
@@ -27,10 +31,6 @@ private:
     //! File i/o */
     /*! Write the stats row to the spreadsheet */
     virtual void write(QXlsx::Document &xlsx, const qint32 row) const = 0;
-
-    //! Parse data */
-    /*! Parse  stats from a line of a text filee */
-    virtual bool parse(QString &line) = 0;
 };
 } // namespace stats
 

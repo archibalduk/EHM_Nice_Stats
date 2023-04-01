@@ -38,7 +38,8 @@ SOURCES += \
     stats/club.cpp \
     stats/ice_time.cpp \
     stats/manager.cpp \
-    stats/player.cpp
+    stats/player.cpp \
+    stats/player/skater_stats.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -48,6 +49,8 @@ HEADERS += \
     stats/ice_time.h \
     stats/manager.h \
     stats/player.h \
+    stats/player/player_stats_base_class.h \
+    stats/player/skater_stats.h \
     stats/qxlsx/include/xlsxabstractooxmlfile.h \
     stats/qxlsx/include/xlsxabstractooxmlfile_p.h \
     stats/qxlsx/include/xlsxabstractsheet.h \

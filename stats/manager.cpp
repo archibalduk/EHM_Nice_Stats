@@ -58,7 +58,14 @@ bool Manager::saveSpreadsheet()
     QXlsx::Document xlsx;
 
     Club::writeToSpreadsheet(xlsx, data_->clubs_);
-    Player::writeToSpreadsheet(xlsx, data_->players_);
+
+    // Get a list of the clubs sorted by name so that the player stats worksheets are sorted alphabetically.
+    // Add a nullptr to the list for unassigned players
+    auto sorted_club_list{Club::alphabeticalCopy(data_->clubs_)};
+    sorted_club_list.push_back(nullptr);
+
+    for (const auto &itr : sorted_club_list)
+        Player::writeToSpreadsheet(xlsx, data_->players_, itr);
 
     return xlsx.saveAs(output_file_path_);
 }

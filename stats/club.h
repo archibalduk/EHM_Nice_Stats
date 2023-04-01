@@ -17,7 +17,7 @@ class QTextStream;
 
 namespace stats {
 /*! The Club class contains statistics for a club */
-class Club : SchemaBaseClass
+class Club : public SchemaBaseClass
 {
 public:
     /*! Constructor */
@@ -32,6 +32,11 @@ public:
     static bool parseFile(const QString &file_path, std::vector<std::shared_ptr<Club>> &data);
 
     //! Get data
+    /*! Get a copy of the vector sorted alphabetically by name */
+    static std::vector<std::shared_ptr<Club>> alphabeticalCopy(
+        const std::vector<std::shared_ptr<Club>> &data);
+    /*! Get a hash table of club names and positions within a vector */
+    static QHash<QString, qint32> hash(const std::vector<std::shared_ptr<Club>> &data);
     /*! Get column heading name */
     static QString columnName(const qint32 xlsx_column);
 
@@ -57,13 +62,15 @@ private:
     /*! Find the file position of the next league standings section of a file */
     static qint64 findLeagueStandings(QTextStream &in);
     /*! Parse club stats from a line of a text file */
-    bool parse(QString &line) override;
+    bool parse(QString &line);
     /*! Parse the league standings */
     static void parseLeagueStandings(QTextStream &in, std::vector<std::shared_ptr<Club>> &data);
 
     //! Sort data */
     /*! Sort two Club items */
-    static bool sort(const std::shared_ptr<Club> &lhs, const std::shared_ptr<Club> &rhs);
+    static bool sortByName(const std::shared_ptr<Club> &lhs, const std::shared_ptr<Club> &rhs);
+    static bool sortByPerformance(const std::shared_ptr<Club> &lhs,
+                                  const std::shared_ptr<Club> &rhs);
 
     enum ENUM_TEXT_INPUT_LINE_FLAGS {
         CLUB_NAME_POSITION = 8,

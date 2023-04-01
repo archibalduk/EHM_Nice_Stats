@@ -6,6 +6,7 @@
 // Qt headers
 #include <QDebug>
 #include <QFile>
+#include <QHash>
 #include <QTextStream>
 #include <execution>
 
@@ -53,6 +54,17 @@ void Club::writeToSpreadsheet(QXlsx::Document &xlsx, std::vector<std::shared_ptr
 /* ================== */
 /*      Get Data      */
 /* ================== */
+
+QHash<QString, qint32> Club::hash(const std::vector<std::shared_ptr<Club>> &data)
+{
+    QHash<QString, qint32> h;
+
+    const auto size{static_cast<qint32>(data.size())};
+    for (auto i = 0; i < size; ++i)
+        h.insert(data[i]->name_, i);
+
+    return h;
+}
 
 QString Club::columnName(const qint32 xlsx_column)
 {
@@ -144,10 +156,19 @@ bool Club::parseFile(const QString &file_path, std::vector<std::shared_ptr<Club>
         parseLeagueStandings(in, data);
 
     // Sort the data
-    std::sort(/*std::execution::par,*/ data.begin(), data.end(), Club::sort);
+    std::sort(/*std::execution::par,*/ data.begin(), data.end(), Club::sortByPerformance);
 
     qInfo().noquote() << QStringLiteral("Total clubs parsed: %L1").arg(data.size());
     return true;
+}
+
+std::vector<std::shared_ptr<Club>> Club::alphabeticalCopy(
+    const std::vector<std::shared_ptr<Club>> &data)
+{
+    std::vector<std::shared_ptr<Club>> copy{data};
+    std::sort(/*std::execution::par,*/ copy.begin(), copy.end(), Club::sortByName);
+
+    return copy;
 }
 
 void Club::parseLeagueStandings(QTextStream &in, std::vector<std::shared_ptr<Club>> &data)
@@ -170,7 +191,12 @@ void Club::parseLeagueStandings(QTextStream &in, std::vector<std::shared_ptr<Clu
 /*      Sort Data      */
 /* =================== */
 
-bool Club::sort(const std::shared_ptr<Club> &lhs, const std::shared_ptr<Club> &rhs)
+bool Club::sortByName(const std::shared_ptr<Club> &lhs, const std::shared_ptr<Club> &rhs)
+{
+    return lhs->name_ < rhs->name_;
+}
+
+bool Club::sortByPerformance(const std::shared_ptr<Club> &lhs, const std::shared_ptr<Club> &rhs)
 {
     if (lhs->win_pct_ != rhs->win_pct_)
         return lhs->win_pct_ > rhs->win_pct_;
