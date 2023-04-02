@@ -4,12 +4,10 @@
 #include "club.h"
 #include "container/club_container.h"
 
-// Xlsx headers
-#include "xlsxdocument.h"
-
 // Qt headers
 #include <QDebug>
 #include <QFile>
+#include <QVariant>
 
 using namespace stats;
 
@@ -22,238 +20,250 @@ Skater::Skater()
     
 }
 
-/* ================== */
-/*      File i/o      */
-/* ================== */
+/* =================== */
+/*      Add stats      */
+/* =================== */
 
-void Skater::write(QXlsx::Document &xlsx, const qint32 row) const
+void Skater::add(const qint32 column, const QVariant &value)
 {
-    xlsx.write(row, OUT_NAME, name_);
-
-    const auto club{this->club()};
-    if (club)
-        xlsx.write(row, OUT_CLUB, club->name());
-    else
-        xlsx.write(row, OUT_CLUB, QStringLiteral("[none]"));
-
-    xlsx.write(row, OUT_POS, pos_);
-    xlsx.write(row, OUT_GP, gp_);
-    xlsx.write(row, OUT_G, g_);
-    xlsx.write(row, OUT_A, a_);
-    xlsx.write(row, OUT_PTS, pts_);
-    xlsx.write(row, OUT_PLUS_MINUS, plus_minus_);
-    xlsx.write(row, OUT_PIM, pim_);
-    xlsx.write(row, OUT_PPG, ppg_);
-    xlsx.write(row, OUT_PPA, ppa_);
-    xlsx.write(row, OUT_PPP, ppp_);
-    xlsx.write(row, OUT_SHG, shg_);
-    xlsx.write(row, OUT_SHA, sha_);
-    xlsx.write(row, OUT_SHP, shp_);
-    xlsx.write(row, OUT_GWG, gwg_);
-    xlsx.write(row, OUT_GT, gt_);
-    xlsx.write(row, OUT_FG, fg_);
-    xlsx.write(row, OUT_EN, en_);
-    xlsx.write(row, OUT_SOG, sog_);
-    xlsx.write(row, OUT_SH, sh_);
-    xlsx.write(row, OUT_HT, ht_);
-    xlsx.write(row, OUT_GA, ga_);
-    xlsx.write(row, OUT_TA, ta_);
-    xlsx.write(row, OUT_FO, fo_);
-    xlsx.write(row, OUT_SB, sb_);
-    xlsx.write(row, OUT_TWO_MIN_PEN, two_min_pen_);
-    xlsx.write(row, OUT_FIVE_MIN_PEN, five_min_pen_);
-    xlsx.write(row, OUT_MI, mi_);
-    xlsx.write(row, OUT_MA, ma_);
-    xlsx.write(row, OUT_GM, gm_);
-    xlsx.write(row, OUT_FI, fi_);
-    xlsx.write(row, OUT_FW, fw_);
-    xlsx.write(row, OUT_ATOI, atoi_.toTime());
-    xlsx.write(row, OUT_APPT, appt_.toTime());
-    xlsx.write(row, OUT_APKT, apkt_.toTime());
-    xlsx.write(row, OUT_PLUS, plus_);
-    xlsx.write(row, OUT_MINUS, minus_);
-    xlsx.write(row, OUT_FS, fs_);
-    xlsx.write(row, OUT_AVG_RATING, average_rating_);
+    switch (column) {
+    case GP:
+        gp_ += static_cast<quint16>(value.toInt());
+        break;
+    case G:
+        g_ += static_cast<quint16>(value.toInt());
+        break;
+    case A:
+        a_ += static_cast<quint16>(value.toInt());
+        break;
+    case PTS:
+        pts_ += static_cast<quint16>(value.toInt());
+        break;
+    case PLUS_MINUS:
+        plus_minus_ += static_cast<qint16>(value.toInt());
+        break;
+    case PIM:
+        pim_ += static_cast<quint16>(value.toInt());
+        break;
+    case PPG:
+        ppg_ += static_cast<quint16>(value.toInt());
+        break;
+    case PPA:
+        ppa_ += static_cast<quint16>(value.toInt());
+        break;
+    case PPP:
+        ppp_ += static_cast<quint16>(value.toInt());
+        break;
+    case SHG:
+        shg_ += static_cast<quint16>(value.toInt());
+        break;
+    case SHA:
+        sha_ += static_cast<quint16>(value.toInt());
+        break;
+    case SHP:
+        shp_ += static_cast<quint16>(value.toInt());
+        break;
+    case GWG:
+        gwg_ += static_cast<quint16>(value.toInt());
+        break;
+    case GT:
+        gt_ += static_cast<quint16>(value.toInt());
+        break;
+    case FG:
+        fg_ += static_cast<quint16>(value.toInt());
+        break;
+    case EN:
+        en_ += static_cast<quint16>(value.toInt());
+        break;
+    case SOG:
+        sog_ += static_cast<quint16>(value.toInt());
+        break;
+    case SH:
+        sh_ += value.toDouble();
+        break;
+    case HT:
+        ht_ += static_cast<quint16>(value.toInt());
+        break;
+    case GA:
+        ga_ += static_cast<quint16>(value.toInt());
+        break;
+    case TA:
+        ta_ += static_cast<quint16>(value.toInt());
+        break;
+    case FO:
+        fo_ += value.toDouble();
+        break;
+    case SB:
+        sb_ += static_cast<quint16>(value.toInt());
+        break;
+    case TWO_MIN_PEN:
+        two_min_pen_ += static_cast<quint16>(value.toInt());
+        break;
+    case FIVE_MIN_PEN:
+        five_min_pen_ += static_cast<quint16>(value.toInt());
+        break;
+    case MI:
+        mi_ += static_cast<quint16>(value.toInt());
+        break;
+    case MA:
+        ma_ += static_cast<quint16>(value.toInt());
+        break;
+    case GM:
+        gm_ += static_cast<quint16>(value.toInt());
+        break;
+    case FI:
+        fi_ += static_cast<quint16>(value.toInt());
+        break;
+    case FW:
+        fw_ += static_cast<quint16>(value.toInt());
+        break;
+    case ATOI:
+        //qInfo() << atoi_.toDecimal() << "+" << value;
+        atoi_.add(value);
+        //qInfo() << atoi_.toDecimal() << "\n";
+        break;
+    case APPT:
+        appt_.add(value);
+        break;
+    case APKT:
+        apkt_.add(value);
+        break;
+    case PLUS:
+        plus_ += static_cast<quint16>(value.toInt());
+        break;
+    case MINUS:
+        minus_ += static_cast<quint16>(value.toInt());
+        break;
+    case FS:
+        fs_ += static_cast<quint16>(value.toInt());
+        break;
+    case AVG_RATING:
+        average_rating_ += value.toDouble();
+        break;
+    default:
+        return;
+    };
 }
 
-/* ================== */
-/*      Get Data      */
-/* ================== */
+/* =================== */
+/*      Get Stats      */
+/* =================== */
 
-QString Skater::columnDescription(const qint32 xlsx_column)
+QVariant Skater::get(const qint32 column) const
 {
-    switch (xlsx_column) {
-    case OUT_NAME:
-        return QStringLiteral("Player name");
-    case OUT_CLUB:
-        return QStringLiteral("Club");
-    case OUT_POS:
-        return QStringLiteral("Position");
-    case OUT_GP:
-        return QStringLiteral("Games played");
-    case OUT_G:
-        return QStringLiteral("Goals");
-    case OUT_A:
-        return QStringLiteral("Assists");
-    case OUT_PTS:
-        return QStringLiteral("Points");
-    case OUT_PLUS_MINUS:
-        return QStringLiteral("Plus/minus");
-    case OUT_PIM:
-        return QStringLiteral("Penalties in minutes");
-    case OUT_PPG:
-        return QStringLiteral("Powerplay goals");
-    case OUT_PPA:
-        return QStringLiteral("Powerplay assists");
-    case OUT_PPP:
-        return QStringLiteral("Powerplay points");
-    case OUT_SHG:
-        return QStringLiteral("Shorthanded goals");
-    case OUT_SHA:
-        return QStringLiteral("Shorthanded assists");
-    case OUT_SHP:
-        return QStringLiteral("Shorthanded points");
-    case OUT_GWG:
-        return QStringLiteral("Game winning goals");
-    case OUT_GT:
-        return QStringLiteral("Game tying goals");
-    case OUT_FG:
-        return QStringLiteral("First goals");
-    case OUT_EN:
-        return QStringLiteral("Empty net goals");
-    case OUT_SOG:
-        return QStringLiteral("Shots on goal");
-    case OUT_SH:
-        return QStringLiteral("Shooting percentage");
-    case OUT_HT:
-        return QStringLiteral("Hits given");
-    case OUT_GA:
-        return QStringLiteral("Giveaways");
-    case OUT_TA:
-        return QStringLiteral("Takeaways");
-    case OUT_FO:
-        return QStringLiteral("Faceoff percentage");
-    case OUT_SB:
-        return QStringLiteral("Shots blocked");
-    case OUT_TWO_MIN_PEN:
-        return QStringLiteral("Minor penalties");
-    case OUT_FIVE_MIN_PEN:
-        return QStringLiteral("Major penalties");
-    case OUT_MI:
-        return QStringLiteral("Misconduct penalties");
-    case OUT_MA:
-        return QStringLiteral("Match penalties");
-    case OUT_GM:
-        return QStringLiteral("Game misconduct penalties");
-    case OUT_FI:
-        return QStringLiteral("Fights");
-    case OUT_FW:
-        return QStringLiteral("Fights won");
-    case OUT_ATOI:
-        return QStringLiteral("Average time on ice");
-    case OUT_APPT:
-        return QStringLiteral("Average powerplay time on ice");
-    case OUT_APKT:
-        return QStringLiteral("Average penalty kill time on ice");
-    case OUT_PLUS:
-        return QStringLiteral("Plus (on ice goals for)");
-    case OUT_MINUS:
-        return QStringLiteral("Minus (on ice goals against)");
-    case OUT_FS:
-        return QStringLiteral("First star");
-    case OUT_AVG_RATING:
-        return QStringLiteral("EHM average rating");
+    switch (column) {
+    case NAME:
+        return name();
+    case CLUB:
+        return clubName();
+    case POS:
+        return pos_;
+    case GP:
+        return gp_;
+    case G:
+        return g_;
+    case A:
+        return a_;
+    case PTS:
+        return pts_;
+    case PLUS_MINUS:
+        return plus_minus_;
+    case PIM:
+        return pim_;
+    case PPG:
+        return ppg_;
+    case PPA:
+        return ppa_;
+    case PPP:
+        return ppp_;
+    case SHG:
+        return shg_;
+    case SHA:
+        return sha_;
+    case SHP:
+        return shp_;
+    case GWG:
+        return gwg_;
+    case GT:
+        return gt_;
+    case FG:
+        return fg_;
+    case EN:
+        return en_;
+    case SOG:
+        return sog_;
+    case SH:
+        return sh_;
+    case HT:
+        return ht_;
+    case GA:
+        return ga_;
+    case TA:
+        return ta_;
+    case FO:
+        return fo_;
+    case SB:
+        return sb_;
+    case TWO_MIN_PEN:
+        return two_min_pen_;
+    case FIVE_MIN_PEN:
+        return five_min_pen_;
+    case MI:
+        return mi_;
+    case MA:
+        return ma_;
+    case GM:
+        return gm_;
+    case FI:
+        return fi_;
+    case FW:
+        return fw_;
+    case TTOI: // NOTE: Decimal as QTime doesn't work with hh > 23; mm > 59; or ss > 59
+        return ttoi().toDecimal();
+    case ATOI:
+        return atoi_.get();
+    case APPT:
+        return appt_.get();
+    case APKT:
+        return apkt_.get();
+    case PLUS:
+        return plus_;
+    case MINUS:
+        return minus_;
+    case FS:
+        return fs_;
+    case AVG_RATING:
+        return average_rating_;
+    case GOALS_PER_MINUTE:
+        return getPerMinute(G);
+    case ASSISTS_PER_MINUTE:
+        return getPerMinute(A);
+    case PIM_PER_MINUTE:
+        return getPerMinute(PIM);
+    case SHOTS_ON_GOAL_PER_MINUTE:
+        return getPerMinute(SOG);
+    case SHOTS_BLOCKED_PER_MINUTE:
+        return getPerMinute(SB);
     default:
-        return QStringLiteral("*NO NAME*");
-    }
+        return 0;
+    };
 }
 
-QString Skater::columnName(const qint32 xlsx_column)
+//! Stat item divided by TTOI */
+double Skater::getPerMinute(const qint32 column) const
 {
-    switch (xlsx_column) {
-    case OUT_NAME:
-        return QStringLiteral("Name");
-    case OUT_CLUB:
-        return QStringLiteral("Club");
-    case OUT_POS:
-        return QStringLiteral("Pos");
-    case OUT_GP:
-        return QStringLiteral("GP");
-    case OUT_G:
-        return QStringLiteral("G");
-    case OUT_A:
-        return QStringLiteral("A");
-    case OUT_PTS:
-        return QStringLiteral("Pts");
-    case OUT_PLUS_MINUS:
-        return QStringLiteral("'+/-");
-    case OUT_PIM:
-        return QStringLiteral("PIM");
-    case OUT_PPG:
-        return QStringLiteral("PP G");
-    case OUT_PPA:
-        return QStringLiteral("PP A");
-    case OUT_PPP:
-        return QStringLiteral("PP Pts");
-    case OUT_SHG:
-        return QStringLiteral("SH G");
-    case OUT_SHA:
-        return QStringLiteral("SH A");
-    case OUT_SHP:
-        return QStringLiteral("SH Pts");
-    case OUT_GWG:
-        return QStringLiteral("GWG");
-    case OUT_GT:
-        return QStringLiteral("GT");
-    case OUT_FG:
-        return QStringLiteral("FG");
-    case OUT_EN:
-        return QStringLiteral("EN");
-    case OUT_SOG:
-        return QStringLiteral("SOG");
-    case OUT_SH:
-        return QStringLiteral("Sh%");
-    case OUT_HT:
-        return QStringLiteral("HT");
-    case OUT_GA:
-        return QStringLiteral("GA");
-    case OUT_TA:
-        return QStringLiteral("TA");
-    case OUT_FO:
-        return QStringLiteral("FO%");
-    case OUT_SB:
-        return QStringLiteral("SB");
-    case OUT_TWO_MIN_PEN:
-        return QStringLiteral("2 MIN");
-    case OUT_FIVE_MIN_PEN:
-        return QStringLiteral("5 MIN");
-    case OUT_MI:
-        return QStringLiteral("Mi");
-    case OUT_MA:
-        return QStringLiteral("Ma");
-    case OUT_GM:
-        return QStringLiteral("GM");
-    case OUT_FI:
-        return QStringLiteral("FI");
-    case OUT_FW:
-        return QStringLiteral("FW");
-    case OUT_ATOI:
-        return QStringLiteral("ATOI");
-    case OUT_APPT:
-        return QStringLiteral("APPT");
-    case OUT_APKT:
-        return QStringLiteral("APKT");
-    case OUT_PLUS:
-        return QStringLiteral("'+");
-    case OUT_MINUS:
-        return QStringLiteral("'-");
-    case OUT_FS:
-        return QStringLiteral("FS");
-    case OUT_AVG_RATING:
-        return QStringLiteral("Av R");
-    default:
-        return QStringLiteral("*NO NAME*");
-    }
+    const auto value{get(column).toDouble()};
+
+    if (value == 0.0)
+        return value;
+
+    return value / ttoi().toDecimal();
+}
+
+//! Total time on ice */
+IceTime Skater::ttoi() const
+{
+    return atoi_.multiplied(gp_);
 }
 
 /* ==================== */
@@ -322,6 +332,11 @@ bool Skater::parse(QString &line,
     minus_ = stats_list[IN_MINUS].toUShort();
     fs_ = stats_list[IN_FS].toUShort();
     average_rating_ = stats_list[IN_AVG_RATING].toDouble();
+
+    // Add to club totals
+    const auto club{club_.lock()};
+    if (club)
+        club->add(this);
 
     return true;
 }

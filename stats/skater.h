@@ -5,13 +5,9 @@
 #include "base_class/player.h"
 #include "ice_time.h"
 
-// Xlsx headers
-namespace QXlsx {
-class Document;
-}
-
 // Qt headers
 #include <memory>
+class QVariant;
 
 namespace stats {
 
@@ -23,16 +19,17 @@ class Skater : public Player
 public:
     Skater();
 
-    //! File i/o */
-    /*! Write the skater stats row to the spreadsheet */
-    void write(QXlsx::Document &xlsx, const qint32 row) const override;
+    //! Add stats */
+    virtual void add(const qint32 column, const QVariant &value) override;
 
-    //! Get data */
-    /*! Get club pointer */
-    /*! Get column heading description */
-    static QString columnDescription(const qint32 xlsx_column);
-    /*! Get column heading name */
-    static QString columnName(const qint32 xlsx_column);
+    //! Get data
+    /*! Get column end position */
+    inline qint32 columnEndPos() const override { return DATA_COLUMNS_END_POS; }
+
+    //! Get stats */
+    QVariant get(const qint32 column) const override;
+    double getPerMinute(const qint32 column) const;
+    virtual IceTime ttoi() const;
 
     //! Parse data */
     /*! Parse skater stats from a line of a text file */
@@ -40,48 +37,54 @@ public:
                const ClubContainer *clubs,
                const QHash<QString, qint32> &club_hash_table);
 
-    enum ENUM_STATS_OUTPUT_COLUMNS {
-        OUT_NAME = 1, // Xlsx indexes start at 1
-        OUT_CLUB,
-        OUT_POS,
-        OUT_GP,
-        OUT_G,
-        OUT_A,
-        OUT_PTS,
-        OUT_PLUS_MINUS,
-        OUT_PIM,
-        OUT_PPG,
-        OUT_PPA,
-        OUT_PPP,
-        OUT_SHG,
-        OUT_SHA,
-        OUT_SHP,
-        OUT_GWG,
-        OUT_GT,
-        OUT_FG,
-        OUT_EN,
-        OUT_SOG,
-        OUT_SH,
-        OUT_HT,
-        OUT_GA,
-        OUT_TA,
-        OUT_FO,
-        OUT_SB,
-        OUT_TWO_MIN_PEN,
-        OUT_FIVE_MIN_PEN,
-        OUT_MI,
-        OUT_MA,
-        OUT_GM,
-        OUT_FI,
-        OUT_FW,
-        OUT_ATOI,
-        OUT_APPT,
-        OUT_APKT,
-        OUT_PLUS,
-        OUT_MINUS,
-        OUT_FS,
-        OUT_AVG_RATING,
-        OUTPUT_COLUMNS_END_POS
+    enum ENUM_STATS_COLUMNS {
+        NAME = first_column_id_,
+        CLUB,
+        POS,
+        GP,
+        G,
+        A,
+        PTS,
+        PLUS_MINUS,
+        PIM,
+        PPG,
+        PPA,
+        PPP,
+        SHG,
+        SHA,
+        SHP,
+        GWG,
+        GT,
+        FG,
+        EN,
+        SOG,
+        SH,
+        HT,
+        GA,
+        TA,
+        FO,
+        SB,
+        TWO_MIN_PEN,
+        FIVE_MIN_PEN,
+        MI,
+        MA,
+        GM,
+        FI,
+        FW,
+        TTOI,
+        ATOI,
+        APPT,
+        APKT,
+        PLUS,
+        MINUS,
+        FS,
+        AVG_RATING,
+        GOALS_PER_MINUTE,
+        ASSISTS_PER_MINUTE,
+        PIM_PER_MINUTE,
+        SHOTS_ON_GOAL_PER_MINUTE,
+        SHOTS_BLOCKED_PER_MINUTE,
+        DATA_COLUMNS_END_POS
     };
 
 private:

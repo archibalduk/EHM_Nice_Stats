@@ -59,5 +59,8 @@ bool StatsManager::saveSpreadsheet()
     for (const auto &itr : sorted_club_list)
         skaters_->writeToSpreadsheet(xlsx, itr);
 
+    // Navigate back to the first worksheet ready for when the user next opens the file
+    xlsx.selectSheet(0);
+
     return xlsx.saveAs(output_file_path_);
 }

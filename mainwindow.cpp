@@ -13,6 +13,8 @@
 #include <QMessageBox>
 #include <QPushButton>
 
+#include "stats/ice_time.h"
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , open_player_stats_button_(new QPushButton(this))
@@ -27,6 +29,18 @@ MainWindow::MainWindow(QWidget *parent)
                                          QCoreApplication::applicationVersion()));
 
     //setWindowIcon(QIcon("ehm_editor.ico")); // TODO
+
+    IceTime a;
+    a.add(10, 30);
+    qInfo() << a.toTime() << a.toDecimal();
+
+    IceTime b;
+    QVariant c(QTime(0, 45, 45));
+    b.add(c);
+    qInfo() << b.toTime() << b.toDecimal();
+
+    a.add(b);
+    qInfo() << a.toTime() << a.toDecimal();
 
     initUi();
 }

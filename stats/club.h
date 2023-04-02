@@ -3,16 +3,15 @@
 
 // Application headers
 #include "base_class/schema_base_class.h"
-
-// Xlsx headers
-namespace QXlsx {
-class Document;
-}
+#include "totals/skater_totals.h"
 
 // Qt headers
 #include <memory>
+class QVariant;
 
 namespace stats {
+class Skater;
+
 /*! The Club class contains statistics for a club */
 class Club : public SchemaBaseClass
 {
@@ -20,15 +19,16 @@ public:
     /*! Constructor */
     Club();
 
-    //! File i/o */
-    /*! Write the club stats row to the spreadsheet */
-    void write(QXlsx::Document &xlsx, const qint32 row) const override;
+    //! Add stats */
+    /*! Add skater stats to the club totals and averages */
+    void add(const Skater *player);
 
     //! Get data
-    /*! Get column heading name */
-    static QString columnName(const qint32 xlsx_column);
+    /*! Get column end position */
+    inline qint32 columnEndPos() const override { return DATA_COLUMNS_END_POS; }
 
-    //! Get stats data */
+    //! Get stats */
+    QVariant get(const qint32 column) const override;
     inline qint16 goalDifference() const { return goals_for_ - goals_against_; }
 
     //! Parse data */
@@ -41,17 +41,33 @@ public:
     static bool sortByPerformance(const std::shared_ptr<Club> &lhs,
                                   const std::shared_ptr<Club> &rhs);
 
-    enum ENUM_STATS_OUTPUT_COLUMNS {
-        OUT_NAME = 1, // Xlsx indexes start at 1
-        OUT_GP,
-        OUT_W,
-        OUT_L,
-        OUT_T,
-        OUT_PCT,
-        OUT_GF,
-        OUT_GA,
-        OUT_PTS,
-        OUTPUT_COLUMNS_END_POS
+    enum ENUM_STATS_COLUMNS {
+        // Club stats
+        NAME = first_column_id_,
+        GP,
+        W,
+        L,
+        T,
+        PCT,
+        GF,
+        GA,
+        PTS,
+        // Defencemen
+        DEF_TTOI,
+        DEF_AVERAGE_GOALS_PER_MINUTE,
+        DEF_AVERAGE_ASSISTS_PER_MINUTE,
+        DEF_AVERAGE_PIM_PER_MINUTE,
+        DEF_AVERAGE_SHOTS_ON_GOAL_PER_MINUTE,
+        DEF_AVERAGE_SHOTS_BLOCKED_PER_MINUTE,
+        // Forwards
+        FWD_TTOI,
+        FWD_AVERAGE_GOALS_PER_MINUTE,
+        FWD_AVERAGE_ASSISTS_PER_MINUTE,
+        FWD_AVERAGE_PIM_PER_MINUTE,
+        FWD_AVERAGE_SHOTS_ON_GOAL_PER_MINUTE,
+        FWD_AVERAGE_SHOTS_BLOCKED_PER_MINUTE,
+        // End position
+        DATA_COLUMNS_END_POS
     };
 
 private:
@@ -64,6 +80,10 @@ private:
     quint16 goals_for_{0};
     quint16 goals_against_{0};
     quint16 points_{0};
+
+    // Totals
+    std::unique_ptr<SkaterTotals> defencemen_totals_;
+    std::unique_ptr<SkaterTotals> forward_totals_;
 
     enum ENUM_TEXT_INPUT_LINE_FLAGS {
         CLUB_NAME_POSITION = 8,

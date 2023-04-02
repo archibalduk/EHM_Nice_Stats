@@ -21,6 +21,7 @@ class SkaterContainer : public ContainerBaseClass
 {
 public:
     SkaterContainer();
+    virtual ~SkaterContainer();
 
     //! File i/o */
     /*! Write the player stats to the spreadsheet */
@@ -33,6 +34,14 @@ public:
 private:
     // Data
     std::vector<Skater> data_;
+
+    //! Get data: columns */
+    /*! Get column end position */
+    qint32 columnEndPos() const override;
+    /*! Get column heading description */
+    QString columnDescription(const qint32 column) const override;
+    /*! Get column heading name */
+    QString columnName(const qint32 column) const override;
 
     //! Parse data */
     /*! Find the file position of the player stats section of a file */

@@ -36,12 +36,15 @@ SOURCES += \
     mainwindow.cpp \
     settings.cpp \
     stats/base_class/player.cpp \
+    stats/base_class/schema_base_class.cpp \
     stats/club.cpp \
     stats/container/club_container.cpp \
+    stats/container/container_base_class.cpp \
     stats/container/skater_container.cpp \
     stats/ice_time.cpp \
     stats/skater.cpp \
-    stats/stats_manager.cpp
+    stats/stats_manager.cpp \
+    stats/totals/skater_totals.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -101,7 +104,8 @@ HEADERS += \
     stats/qxlsx/include/xlsxzipreader_p.h \
     stats/qxlsx/include/xlsxzipwriter_p.h \
     stats/skater.h \
-    stats/stats_manager.h
+    stats/stats_manager.h \
+    stats/totals/skater_totals.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -20,6 +20,7 @@ class ClubContainer : public ContainerBaseClass
 {
 public:
     ClubContainer();
+    virtual ~ClubContainer();
 
     //! File i/o */
     /*! Write the club stats to the spreadsheet */
@@ -40,6 +41,14 @@ public:
 private:
     // Data
     std::vector<std::shared_ptr<Club>> data_;
+
+    //! Get data: columns */
+    /*! Get column end position */
+    qint32 columnEndPos() const override;
+    /*! Get column heading description */
+    QString columnDescription(const qint32 column) const override;
+    /*! Get column heading name */
+    QString columnName(const qint32 column) const override;
 
     //! Parse data */
     /*! Find the file position of the next league standings section of a file */

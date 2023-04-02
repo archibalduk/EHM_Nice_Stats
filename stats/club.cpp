@@ -1,7 +1,10 @@
 #include "club.h"
 
-// Xlsx headers
-#include "xlsxdocument.h"
+// Application headers
+#include "skater.h"
+
+// Qt headers
+#include <QVariant>
 
 using namespace stats;
 
@@ -10,56 +13,88 @@ using namespace stats;
 /* ==================== */
 
 Club::Club()
+    : defencemen_totals_(std::make_unique<SkaterTotals>())
+    , forward_totals_(std::make_unique<SkaterTotals>())
 {
     
 }
 
-/* ================== */
-/*      File i/o      */
-/* ================== */
+/* =================== */
+/*      Add Stats      */
+/* =================== */
 
-void Club::write(QXlsx::Document &xlsx, const qint32 row) const
+void Club::add(const Skater *player)
 {
-    xlsx.write(row, OUT_NAME, name_);
-    xlsx.write(row, OUT_GP, games_played_);
-    xlsx.write(row, OUT_W, won_);
-    xlsx.write(row, OUT_L, lost_);
-    xlsx.write(row, OUT_T, tied_);
-    xlsx.write(row, OUT_PCT, win_pct_);
-    xlsx.write(row, OUT_GF, goals_for_);
-    xlsx.write(row, OUT_GA, goals_against_);
-    xlsx.write(row, OUT_PTS, points_);
+    if (player->isDefenceman())
+        defencemen_totals_->add(player);
+    else
+        forward_totals_->add(player);
 }
 
-/* ================== */
-/*      Get Data      */
-/* ================== */
+/* =================== */
+/*      Get Stats      */
+/* =================== */
 
-QString Club::columnName(const qint32 xlsx_column)
+QVariant Club::get(const qint32 column) const
 {
-    switch (xlsx_column) {
-    case OUT_NAME:
-        return QStringLiteral("Name");
-    case OUT_GP:
-        return QStringLiteral("GP");
-    case OUT_W:
-        return QStringLiteral("W");
-    case OUT_L:
-        return QStringLiteral("L");
-    case OUT_T:
-        return QStringLiteral("T");
-    case OUT_PCT:
-        return QStringLiteral("PCT");
-    case OUT_GF:
-        return QStringLiteral("GF");
-    case OUT_GA:
-        return QStringLiteral("GA");
-    case OUT_PTS:
-        return QStringLiteral("Pts");
-
+    switch (column) {
+    // Club stats
+    case NAME:
+        return name();
+    case GP:
+        return games_played_;
+    case W:
+        return won_;
+    case L:
+        return lost_;
+    case T:
+        return tied_;
+    case PCT:
+        return win_pct_;
+    case GF:
+        return goals_for_;
+    case GA:
+        return goals_against_;
+    case PTS:
+        return points_;
+    // Defencemen
+    case DEF_TTOI:
+        return defencemen_totals_->ttoi().get();
+    case DEF_AVERAGE_GOALS_PER_MINUTE:
+        qInfo() << name();
+        qInfo() << defencemen_totals_->count();
+        qInfo() << "GP" << defencemen_totals_->total(Skater::GP);
+        qInfo() << "ATOI" << defencemen_totals_->total(Skater::ATOI);
+        qInfo() << "Calc"
+                << defencemen_totals_->total(Skater::ATOI).toDouble()
+                       * defencemen_totals_->total(Skater::GP).toDouble();
+        qInfo() << "TTOI" << defencemen_totals_->total(Skater::TTOI) << "\n";
+        return defencemen_totals_->averagePerMinute(Skater::G);
+    case DEF_AVERAGE_ASSISTS_PER_MINUTE:
+        return defencemen_totals_->averagePerMinute(Skater::A);
+    case DEF_AVERAGE_PIM_PER_MINUTE:
+        return defencemen_totals_->averagePerMinute(Skater::PIM);
+    case DEF_AVERAGE_SHOTS_ON_GOAL_PER_MINUTE:
+        return defencemen_totals_->averagePerMinute(Skater::SOG);
+    case DEF_AVERAGE_SHOTS_BLOCKED_PER_MINUTE:
+        return defencemen_totals_->averagePerMinute(Skater::SB);
+    // Forwards
+    case FWD_TTOI:
+        return forward_totals_->ttoi().get();
+    case FWD_AVERAGE_GOALS_PER_MINUTE:
+        return forward_totals_->averagePerMinute(Skater::G);
+    case FWD_AVERAGE_ASSISTS_PER_MINUTE:
+        return forward_totals_->averagePerMinute(Skater::A);
+    case FWD_AVERAGE_PIM_PER_MINUTE:
+        return forward_totals_->averagePerMinute(Skater::PIM);
+    case FWD_AVERAGE_SHOTS_ON_GOAL_PER_MINUTE:
+        return forward_totals_->averagePerMinute(Skater::SOG);
+    case FWD_AVERAGE_SHOTS_BLOCKED_PER_MINUTE:
+        return forward_totals_->averagePerMinute(Skater::SB);
+    // Default
     default:
-        return QStringLiteral("*NO NAME*");
-    }
+        return QVariant();
+    };
 }
 
 /* ==================== */

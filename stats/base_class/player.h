@@ -13,9 +13,18 @@ class Player : public SchemaBaseClass
 public:
     Player();
 
+    //! Add stats */
+    virtual void add(const qint32 column, const QVariant &value) = 0;
+
     //! Get data */
     /*! Get club pointer */
     std::shared_ptr<Club> club() const;
+    QString clubName() const;
+
+    //! Get data: positions */
+    bool isGoalie() const;
+    bool isDefenceman() const;
+    bool isForward() const;
 
 protected:
     // Data

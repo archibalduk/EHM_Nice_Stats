@@ -14,6 +14,8 @@ using namespace stats;
 
 ClubContainer::ClubContainer() {}
 
+ClubContainer::~ClubContainer() {}
+
 /* ================== */
 /*      File i/o      */
 /* ================== */
@@ -22,13 +24,10 @@ void ClubContainer::writeToSpreadsheet(QXlsx::Document &xlsx)
 {
     xlsx.addSheet(QStringLiteral("Club stats"));
 
-    auto row{1};
-
-    for (auto column = 1; column < Club::OUTPUT_COLUMNS_END_POS; ++column)
-        xlsx.write(row, column, Club::columnName(column));
+    auto row{writeHeaderRow(xlsx)};
 
     for (const auto &itr : data_)
-        itr->write(xlsx, ++row);
+        itr->write(xlsx, row++);
 }
 
 /* ================== */
@@ -60,6 +59,123 @@ QHash<QString, qint32> stats::ClubContainer::hash() const
         h.insert(data_[i]->name(), i);
 
     return h;
+}
+
+/* =========================== */
+/*      Get Data: Columns      */
+/* =========================== */
+
+qint32 ClubContainer::columnEndPos() const
+{
+    return Club::DATA_COLUMNS_END_POS;
+}
+
+QString ClubContainer::columnDescription(const qint32 column) const
+{
+    switch (column) {
+    // Club stats
+    case Club::NAME:
+        return QStringLiteral("Club name");
+    case Club::GP:
+        return QStringLiteral("Games played");
+    case Club::W:
+        return QStringLiteral("Won");
+    case Club::L:
+        return QStringLiteral("Lost");
+    case Club::T:
+        return QStringLiteral("Tied");
+    case Club::PCT:
+        return QStringLiteral("Win percentage");
+    case Club::GF:
+        return QStringLiteral("Goals for/scored");
+    case Club::GA:
+        return QStringLiteral("Goals against");
+    case Club::PTS:
+        return QStringLiteral("Points");
+    // Defencemen
+    case Club::DEF_TTOI:
+        return QStringLiteral("Defenceman total time on ice");
+    case Club::DEF_AVERAGE_GOALS_PER_MINUTE:
+        return QStringLiteral("Defenceman average goals per minute");
+    case Club::DEF_AVERAGE_ASSISTS_PER_MINUTE:
+        return QStringLiteral("Defenceman average assists per minute");
+    case Club::DEF_AVERAGE_PIM_PER_MINUTE:
+        return QStringLiteral("Defenceman average PIM per minute");
+    case Club::DEF_AVERAGE_SHOTS_ON_GOAL_PER_MINUTE:
+        return QStringLiteral("Defenceman average shots on goal per minute");
+    case Club::DEF_AVERAGE_SHOTS_BLOCKED_PER_MINUTE:
+        return QStringLiteral("Defenceman average shots blocked per minute");
+    // Forwards
+    case Club::FWD_TTOI:
+        return QStringLiteral("Forward total time on ice");
+    case Club::FWD_AVERAGE_GOALS_PER_MINUTE:
+        return QStringLiteral("Forward average goals per minute");
+    case Club::FWD_AVERAGE_ASSISTS_PER_MINUTE:
+        return QStringLiteral("Forward average assists per minute");
+    case Club::FWD_AVERAGE_PIM_PER_MINUTE:
+        return QStringLiteral("Forward average PIM per minute");
+    case Club::FWD_AVERAGE_SHOTS_ON_GOAL_PER_MINUTE:
+        return QStringLiteral("Forward average shots on goal per minute");
+    case Club::FWD_AVERAGE_SHOTS_BLOCKED_PER_MINUTE:
+        return QStringLiteral("Forward average shots blocked per minute");
+    // Default
+    default:
+        return QStringLiteral("*NO NAME*");
+    }
+}
+
+QString ClubContainer::columnName(const qint32 column) const
+{
+    switch (column) {
+    // Club stats
+    case Club::NAME:
+        return QStringLiteral("Name");
+    case Club::GP:
+        return QStringLiteral("GP");
+    case Club::W:
+        return QStringLiteral("W");
+    case Club::L:
+        return QStringLiteral("L");
+    case Club::T:
+        return QStringLiteral("T");
+    case Club::PCT:
+        return QStringLiteral("PCT");
+    case Club::GF:
+        return QStringLiteral("GF");
+    case Club::GA:
+        return QStringLiteral("GA");
+    case Club::PTS:
+        return QStringLiteral("Pts");
+    // Defencemen
+    case Club::DEF_TTOI:
+        return QStringLiteral("Def TTOI");
+    case Club::DEF_AVERAGE_GOALS_PER_MINUTE:
+        return QStringLiteral("Def avg G/min");
+    case Club::DEF_AVERAGE_ASSISTS_PER_MINUTE:
+        return QStringLiteral("Def avg A/min");
+    case Club::DEF_AVERAGE_PIM_PER_MINUTE:
+        return QStringLiteral("Def avg PIM/min");
+    case Club::DEF_AVERAGE_SHOTS_ON_GOAL_PER_MINUTE:
+        return QStringLiteral("Def avg SOG/min");
+    case Club::DEF_AVERAGE_SHOTS_BLOCKED_PER_MINUTE:
+        return QStringLiteral("Def avg SB/min");
+    // Forwards
+    case Club::FWD_TTOI:
+        return QStringLiteral("Fwd TTOI");
+    case Club::FWD_AVERAGE_GOALS_PER_MINUTE:
+        return QStringLiteral("Fwd avg G/min");
+    case Club::FWD_AVERAGE_ASSISTS_PER_MINUTE:
+        return QStringLiteral("Fwd avg A/min");
+    case Club::FWD_AVERAGE_PIM_PER_MINUTE:
+        return QStringLiteral("Fwd avg PIM/min");
+    case Club::FWD_AVERAGE_SHOTS_ON_GOAL_PER_MINUTE:
+        return QStringLiteral("Fwd avg SOG/min");
+    case Club::FWD_AVERAGE_SHOTS_BLOCKED_PER_MINUTE:
+        return QStringLiteral("Fwd avg SB/min");
+    // Default
+    default:
+        return QStringLiteral("*NO NAME*");
+    }
 }
 
 /* ==================== */
