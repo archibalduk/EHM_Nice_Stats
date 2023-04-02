@@ -49,6 +49,8 @@ QVariant Club::get(const qint32 column) const
         return lost_;
     case T:
         return tied_;
+    case O_SL:
+        return overtimeAndShootoutLosses();
     case PCT:
         return win_pct_;
     case GF:
@@ -61,14 +63,6 @@ QVariant Club::get(const qint32 column) const
     case DEF_TTOI:
         return defencemen_totals_->ttoi().get();
     case DEF_AVERAGE_GOALS_PER_MINUTE:
-        qInfo() << name();
-        qInfo() << defencemen_totals_->count();
-        qInfo() << "GP" << defencemen_totals_->total(Skater::GP);
-        qInfo() << "ATOI" << defencemen_totals_->total(Skater::ATOI);
-        qInfo() << "Calc"
-                << defencemen_totals_->total(Skater::ATOI).toDouble()
-                       * defencemen_totals_->total(Skater::GP).toDouble();
-        qInfo() << "TTOI" << defencemen_totals_->total(Skater::TTOI) << "\n";
         return defencemen_totals_->averagePerMinute(Skater::G);
     case DEF_AVERAGE_ASSISTS_PER_MINUTE:
         return defencemen_totals_->averagePerMinute(Skater::A);
@@ -97,6 +91,11 @@ QVariant Club::get(const qint32 column) const
     };
 }
 
+qint16 Club::overtimeAndShootoutLosses() const
+{
+    return games_played_ - won_ - lost_ - tied_;
+}
+
 /* ==================== */
 /*      Parse Data      */
 /* ==================== */
@@ -113,23 +112,34 @@ bool Club::parse(QString &line)
 
     //qInfo() << stats_list;
 
-    if (stats_list.size() != INPUT_COLUMNS_COUNT) {
-        qWarning().noquote()
-            << QStringLiteral(
-                   "Unexpected number of club stats columns found (%L1 found | %L2 expected)")
-                   .arg(stats_list.size())
-                   .arg(INPUT_COLUMNS_COUNT);
+    if (stats_list.size() != INPUT_COLUMNS_COUNT && stats_list.size() != INPUT_OT_SL_COLUMNS_COUNT) {
+        qWarning().noquote() << QStringLiteral("Unexpected number of club stats columns found (%L1 "
+                                               "found | %L2 or %L3 expected)")
+                                    .arg(stats_list.size())
+                                    .arg(INPUT_COLUMNS_COUNT)
+                                    .arg(INPUT_OT_SL_COLUMNS_COUNT);
         return false;
     }
 
     games_played_ = stats_list[IN_GP].toUShort();
     won_ = stats_list[IN_W].toUShort();
     lost_ = stats_list[IN_L].toUShort();
-    tied_ = stats_list[IN_T].toUShort();
-    win_pct_ = stats_list[IN_PCT].toDouble();
-    goals_for_ = stats_list[IN_GF].toUShort();
-    goals_against_ = stats_list[IN_GA].toUShort();
-    points_ = stats_list[IN_PTS].toUShort();
+
+    // Non-OT/SO Losses tables
+    if (stats_list.size() == INPUT_COLUMNS_COUNT) {
+        tied_ = stats_list[IN_T].toUShort();
+        win_pct_ = stats_list[IN_PCT].toDouble();
+        goals_for_ = stats_list[IN_GF].toUShort();
+        goals_against_ = stats_list[IN_GA].toUShort();
+        points_ = stats_list[IN_PTS].toUShort();
+    }
+    // OT/SO Losses tables
+    else {
+        win_pct_ = stats_list[IN_PCT + INPUT_OT_SL_MODIFIER].toDouble();
+        goals_for_ = stats_list[IN_GF + INPUT_OT_SL_MODIFIER].toUShort();
+        goals_against_ = stats_list[IN_GA + INPUT_OT_SL_MODIFIER].toUShort();
+        points_ = stats_list[IN_PTS + INPUT_OT_SL_MODIFIER].toUShort();
+    }
 
     return true;
 }

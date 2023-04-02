@@ -84,6 +84,8 @@ QString ClubContainer::columnDescription(const qint32 column) const
         return QStringLiteral("Lost");
     case Club::T:
         return QStringLiteral("Tied");
+    case Club::O_SL:
+        return QStringLiteral("Overtime / Shoot-out losses");
     case Club::PCT:
         return QStringLiteral("Win percentage");
     case Club::GF:
@@ -138,6 +140,8 @@ QString ClubContainer::columnName(const qint32 column) const
         return QStringLiteral("L");
     case Club::T:
         return QStringLiteral("T");
+    case Club::O_SL:
+        return QStringLiteral("OT/SO L");
     case Club::PCT:
         return QStringLiteral("PCT");
     case Club::GF:

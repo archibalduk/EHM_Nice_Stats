@@ -30,6 +30,7 @@ public:
     //! Get stats */
     QVariant get(const qint32 column) const override;
     inline qint16 goalDifference() const { return goals_for_ - goals_against_; }
+    qint16 overtimeAndShootoutLosses() const;
 
     //! Parse data */
     /*! Parse club stats from a line of a text file */
@@ -48,6 +49,7 @@ public:
         W,
         L,
         T,
+        O_SL,
         PCT,
         GF,
         GA,
@@ -99,7 +101,9 @@ private:
         IN_GF,
         IN_GA,
         IN_PTS,
-        INPUT_COLUMNS_COUNT
+        INPUT_COLUMNS_COUNT,
+        INPUT_OT_SL_COLUMNS_COUNT,
+        INPUT_OT_SL_MODIFIER = INPUT_OT_SL_COLUMNS_COUNT - INPUT_COLUMNS_COUNT,
     };
 };
 } // namespace stats
