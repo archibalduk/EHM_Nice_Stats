@@ -5,7 +5,7 @@
 
 :construction: This tool is a work in progress. Only skaters and regular season stats are currently supported. I plan to add goalies and playoff stats in the near future together with a limited range of graphs/charts.
 
-Find more tools for Eastside Hockey Manger on [The Blue Line](https://ehmtheblueline.com).
+:wave: Find more tools and resources for Eastside Hockey Manger on [The Blue Line](https://ehmtheblueline.com).
 
 ## How to Use
 
