@@ -5,6 +5,8 @@
 class Settings;
 
 // Qt headers
+class QButtonGroup;
+class QGroupBox;
 class QLineEdit;
 class QPushButton;
 #include <QMainWindow>
@@ -21,12 +23,25 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+protected:
+    /*!
+     * \brief Close the application
+     * \param event QCloseEvent
+     */
+    void closeEvent(QCloseEvent *event);
+
 private:
+    // Attributes
+    bool generate_has_been_clicked_{false};
+
     // Buttons
     QPushButton *generate_button_{nullptr};
     QPushButton *open_player_stats_button_{nullptr};
     QPushButton *open_club_stats_button_{nullptr};
     QPushButton *select_output_file_button_{nullptr};
+
+    // Button groups
+    QButtonGroup *time_format_button_group_{nullptr};
 
     // Fields
     QLineEdit *player_stats_path_{nullptr};
@@ -38,11 +53,21 @@ private:
 
     // Ui functions
     /*!
-     * \brief Initialise the user interface
+    * \brief Initialises the file paths group and returns as a group widget
+    * \return file paths QGroupWidget
+    */
+    QGroupBox *initGroupFilePaths();
+    /*!
+     * \brief Initialises the settings group and returns as a group widget
+     * \return settings QGroupWidget
+     */
+    QGroupBox *initGroupSettings();
+    /*!
+     * \brief Initialises the user interface
      */
     void initUi();
     /*!
-     * \brief Initialise path selection widgets
+     * \brief Initialises path selection widgets
      * \param title Path title
      * \param path_widget Path text display
      * \param path_selection_button Path selection button
@@ -56,7 +81,7 @@ private:
 
 private slots:
     /*!
-     * \brief Generate and output the statistics
+     * \brief Generates and output the statistics xlsx spreadsheet
      */
     void generate();
 };

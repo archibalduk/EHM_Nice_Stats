@@ -26,6 +26,9 @@ CONFIG += warn_on
 VERSION = 1.0.0
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
+# Resources
+RC_FILE = EHM_Nice_Stats.rc
+
 #QXlsx library
 Debug:LIBS += -L"$$_PRO_FILE_PWD_/stats/qxlsx/lib" -lQXlsx_debug
 Release:LIBS += -L"$$_PRO_FILE_PWD_/stats/qxlsx/lib" -lQXlsx
@@ -39,6 +42,7 @@ SOURCES += \
     stats/base_class/schema_base_class.cpp \
     stats/club.cpp \
     stats/container/club_container.cpp \
+    stats/container/column_data.cpp \
     stats/container/container_base_class.cpp \
     stats/container/skater_container.cpp \
     stats/ice_time.cpp \
@@ -53,6 +57,7 @@ HEADERS += \
     stats/base_class/schema_base_class.h \
     stats/club.h \
     stats/container/club_container.h \
+    stats/container/column_data.h \
     stats/container/container_base_class.h \
     stats/container/skater_container.h \
     stats/ice_time.h \
@@ -113,5 +118,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
+    README.md \
+    res/ehm_nice_stats_example.png \
     stats/qxlsx/lib/QXlsx.lib \
     stats/qxlsx/lib/QXlsx_debug.lib

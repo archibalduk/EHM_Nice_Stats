@@ -34,6 +34,16 @@ bool StatsManager::generate()
     return true;
 }
 
+size_t StatsManager::clubCount() const
+{
+    return clubs_->count();
+}
+
+size_t StatsManager::skaterCount() const
+{
+    return skaters_->count();
+}
+
 bool StatsManager::parse()
 {
     if (!clubs_->parseFile(club_stats_input_path_))
@@ -49,6 +59,8 @@ bool StatsManager::saveSpreadsheet()
 {
     QXlsx::Document xlsx;
 
+    writeCoverSheet(xlsx);
+
     clubs_->writeToSpreadsheet(xlsx);
 
     // Get a list of the clubs sorted by name so that the player stats worksheets are sorted alphabetically.
@@ -63,4 +75,32 @@ bool StatsManager::saveSpreadsheet()
     xlsx.selectSheet(0);
 
     return xlsx.saveAs(output_file_path_);
+}
+
+void StatsManager::writeCoverSheet(QXlsx::Document &xlsx)
+{
+    xlsx.addSheet(QStringLiteral("Overview"));
+
+    // Auto-size column widths
+    xlsx.autosizeColumnWidth();
+
+    auto row{1};
+    const auto left_column{1};
+    const auto right_column{2};
+
+    // League details
+    xlsx.write(row, left_column, QStringLiteral("League / in-game date:"));
+    xlsx.write(row++, right_column, clubs_->leagueDetails());
+
+    // Season
+    xlsx.write(row, left_column, QStringLiteral("Season:"));
+    xlsx.write(row++, right_column, clubs_->season());
+
+    // Club count
+    xlsx.write(row, left_column, QStringLiteral("Clubs:"));
+    xlsx.write(row++, right_column, clubs_->count());
+
+    // Skater count
+    xlsx.write(row, left_column, QStringLiteral("Skaters:"));
+    xlsx.write(row++, right_column, skaters_->count());
 }

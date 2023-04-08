@@ -13,77 +13,128 @@ namespace stats {
 
 class ClubContainer;
 
-/*! The Skater class contains statistics for a skater */
+/*!
+ * \brief The Skater class contains statistics for a skater
+ */
 class Skater : public Player
 {
 public:
     Skater();
 
-    //! Add stats */
+    // Add stats
+    /*!
+     * \brief Adds statistics to the skater for the chosen `column`
+     * \param column Column id
+     * \param value Statistic value
+     */
     virtual void add(const qint32 column, const QVariant &value) override;
 
-    //! Get data
-    /*! Get column end position */
+    // Get data
     inline qint32 columnEndPos() const override { return DATA_COLUMNS_END_POS; }
 
-    //! Get stats */
+    // Get stats
     QVariant get(const qint32 column) const override;
+    /*!
+     * \brief Returns the statistic divided by the skater's total time on ice
+     * \param column Column id
+     * \return statistic per minute
+     */
     double getPerMinute(const qint32 column) const;
+    /*!
+     * \brief Returns the statistic divided by the skater's total time on ice compared against the club average
+     * \param column Column id
+     * \return statistic per minute plus or minus the club average
+     */
+    double getPerMinuteAgainstClubAverage(const qint32 column) const;
+    /*!
+     * \brief Returns total time on ice
+     * \return total time on ice
+     */
     virtual IceTime ttoi() const;
 
-    //! Parse data */
-    /*! Parse skater stats from a line of a text file */
+    // Parse data
+    /*!
+     * \brief Parses skater stats from a line of a text file
+     * \param line Input line from a text file
+     * \param clubs Clubs container
+     * \param club_hash_table Hash of club names and ids for fast look-up
+     * \return 
+     */
     bool parse(QString &line,
                const ClubContainer *clubs,
                const QHash<QString, qint32> &club_hash_table);
 
+    /*!
+     * \brief The ENUM_STATS_COLUMNS enum enum sets out the column ids for the Skater class
+     * \details Changing the order of the enum values will change the order of the columns
+     * output to the spreadsheet.
+     */
     enum ENUM_STATS_COLUMNS {
+        // Bio
         NAME = first_column_id_,
         CLUB,
         POS,
+        // Basic stats
         GP,
         G,
         A,
         PTS,
         PLUS_MINUS,
         PIM,
+        // Powerplay
         PPG,
         PPA,
         PPP,
+        // Penalty kill
         SHG,
         SHA,
         SHP,
+        // Goals/shooting
         GWG,
         GT,
         FG,
         EN,
         SOG,
         SH,
+        // Defence
         HT,
         GA,
         TA,
         FO,
         SB,
+        // Penalties
         TWO_MIN_PEN,
         FIVE_MIN_PEN,
         MI,
         MA,
         GM,
+        // Fights
         FI,
         FW,
+        // Ice time
         TTOI,
         ATOI,
         APPT,
         APKT,
+        // Plus/minus breakdown
         PLUS,
         MINUS,
+        // Performance
         FS,
         AVG_RATING,
+        // Per minute stats
         GOALS_PER_MINUTE,
         ASSISTS_PER_MINUTE,
         PIM_PER_MINUTE,
         SHOTS_ON_GOAL_PER_MINUTE,
         SHOTS_BLOCKED_PER_MINUTE,
+        // Per minute vs club average
+        GOALS_PER_MINUTE_VS_CLUB_AVERAGE,
+        ASSISTS_PER_MINUTE_VS_CLUB_AVERAGE,
+        PIM_PER_MINUTE_VS_CLUB_AVERAGE,
+        SHOTS_ON_GOAL_PER_MINUTE_VS_CLUB_AVERAGE,
+        SHOTS_BLOCKED_PER_MINUTE_VS_CLUB_AVERAGE,
+        // End position
         DATA_COLUMNS_END_POS
     };
 

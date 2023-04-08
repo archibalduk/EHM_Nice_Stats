@@ -21,10 +21,123 @@ using namespace stats;
 
 SkaterContainer::SkaterContainer()
 {
-    
+    initColumnData();
 }
 
 SkaterContainer::~SkaterContainer() {}
+
+/* ===================== */
+/*      Column Data      */
+/* ===================== */
+
+qint32 SkaterContainer::columnEndPos() const
+{
+    return Skater::DATA_COLUMNS_END_POS;
+}
+
+void SkaterContainer::initColumnData()
+{
+    // Bio
+    addColumn(ColumnData(Skater::NAME, QStringLiteral("Name")));
+    addColumn(ColumnData(Skater::CLUB, QStringLiteral("Club"), QStringLiteral("Club")));
+    addColumn(ColumnData(Skater::POS, QStringLiteral("Pos"), QStringLiteral("Position")));
+    // Basic stats
+    addColumn(ColumnData(Skater::GP, QStringLiteral("GP"), QStringLiteral("Games played")));
+    addColumn(ColumnData(Skater::G, QStringLiteral("G"), QStringLiteral("Goals")));
+    addColumn(ColumnData(Skater::A, QStringLiteral("A"), QStringLiteral("Assists")));
+    addColumn(ColumnData(Skater::PTS, QStringLiteral("Pts"), QStringLiteral("Points")));
+    addColumn(ColumnData(Skater::PLUS_MINUS, QStringLiteral("'+/-"), QStringLiteral("Plus/minus")));
+    addColumn(
+        ColumnData(Skater::PIM, QStringLiteral("PIM"), QStringLiteral("Penalties in minutes")));
+    // Powerplay
+    addColumn(ColumnData(Skater::PPG, QStringLiteral("PP G"), QStringLiteral("Powerplay goals")));
+    addColumn(ColumnData(Skater::PPA, QStringLiteral("PP A"), QStringLiteral("Powerplay assists")));
+    addColumn(ColumnData(Skater::PPP, QStringLiteral("PP Pts"), QStringLiteral("Powerplay points")));
+    // Penalty kill
+    addColumn(ColumnData(Skater::SHG, QStringLiteral("SH G"), QStringLiteral("Shorthanded goals")));
+    addColumn(
+        ColumnData(Skater::SHA, QStringLiteral("SH A"), QStringLiteral("Shorthanded assists")));
+    addColumn(
+        ColumnData(Skater::SHP, QStringLiteral("SH Pts"), QStringLiteral("Shorthanded points")));
+    // Goals/shooting
+    addColumn(ColumnData(Skater::GWG, QStringLiteral("GWG"), QStringLiteral("Game winning goals")));
+    addColumn(ColumnData(Skater::GT, QStringLiteral("GT"), QStringLiteral("Game tying goals")));
+    addColumn(ColumnData(Skater::FG, QStringLiteral("FG"), QStringLiteral("First goals")));
+    addColumn(ColumnData(Skater::EN, QStringLiteral("EN"), QStringLiteral("Empty net goals")));
+    addColumn(ColumnData(Skater::SOG, QStringLiteral("SOG"), QStringLiteral("Shots on goal")));
+    addColumn(ColumnData(Skater::SH, QStringLiteral("Sh%"), QStringLiteral("Shooting percentage")));
+    // Defence
+    addColumn(ColumnData(Skater::HT, QStringLiteral("HT"), QStringLiteral("Hits given")));
+    addColumn(ColumnData(Skater::GA, QStringLiteral("GA"), QStringLiteral("Giveaways")));
+    addColumn(ColumnData(Skater::TA, QStringLiteral("TA"), QStringLiteral("Takeaways")));
+    addColumn(ColumnData(Skater::FO, QStringLiteral("FO%"), QStringLiteral("Faceoff percentage")));
+    addColumn(ColumnData(Skater::SB, QStringLiteral("SB"), QStringLiteral("Shots blocked")));
+    // Penalties
+    addColumn(
+        ColumnData(Skater::TWO_MIN_PEN, QStringLiteral("2 MIN"), QStringLiteral("Minor penalties")));
+    addColumn(ColumnData(Skater::FIVE_MIN_PEN,
+                         QStringLiteral("5 MIN"),
+                         QStringLiteral("Major penalties")));
+    addColumn(ColumnData(Skater::MI, QStringLiteral("Mi"), QStringLiteral("Misconduct penalties")));
+    addColumn(ColumnData(Skater::MA, QStringLiteral("Ma"), QStringLiteral("Match penalties")));
+    addColumn(
+        ColumnData(Skater::GM, QStringLiteral("GM"), QStringLiteral("Game misconduct penalties")));
+    // Fights
+    addColumn(ColumnData(Skater::FI, QStringLiteral("FI"), QStringLiteral("Fights")));
+    addColumn(ColumnData(Skater::FW, QStringLiteral("FW"), QStringLiteral("Fights won")));
+    // Ice time
+    addColumn(ColumnData(Skater::TTOI, QStringLiteral("TTOI"), QStringLiteral("Total time on ice")));
+    addColumn(
+        ColumnData(Skater::ATOI, QStringLiteral("ATOI"), QStringLiteral("Average time on ice")));
+    addColumn(ColumnData(Skater::APPT,
+                         QStringLiteral("APPT"),
+                         QStringLiteral("Average powerplay time on ice")));
+    addColumn(ColumnData(Skater::APKT,
+                         QStringLiteral("APKT"),
+                         QStringLiteral("Average penalty kill time on ice")));
+    // Plus/minus breakdown
+    addColumn(
+        ColumnData(Skater::PLUS, QStringLiteral("'+"), QStringLiteral("Plus (on ice goals for)")));
+    addColumn(ColumnData(Skater::MINUS,
+                         QStringLiteral("'-"),
+                         QStringLiteral("Minus (on ice goals against)")));
+    // Performance
+    addColumn(ColumnData(Skater::FS, QStringLiteral("FS"), QStringLiteral("First star")));
+    addColumn(
+        ColumnData(Skater::AVG_RATING, QStringLiteral("Av R"), QStringLiteral("Average rating")));
+    // Per minute stats
+    addColumn(ColumnData(Skater::GOALS_PER_MINUTE,
+                         QStringLiteral("G/min"),
+                         QStringLiteral("Goals per minute")));
+    addColumn(ColumnData(Skater::ASSISTS_PER_MINUTE,
+                         QStringLiteral("A/min"),
+                         QStringLiteral("Assists per minute")));
+    addColumn(ColumnData(Skater::PIM_PER_MINUTE,
+                         QStringLiteral("PIM/min"),
+                         QStringLiteral("PIM per minute")));
+    addColumn(ColumnData(Skater::SHOTS_ON_GOAL_PER_MINUTE,
+                         QStringLiteral("SOG/min"),
+                         QStringLiteral("Shots on goal per minute")));
+    addColumn(ColumnData(Skater::SHOTS_BLOCKED_PER_MINUTE,
+                         QStringLiteral("SB/min"),
+                         QStringLiteral("Shots blocked per minute")));
+    // Per minute vs club average
+    addColumn(ColumnData(Skater::GOALS_PER_MINUTE_VS_CLUB_AVERAGE,
+                         QStringLiteral("G/min vs club avg"),
+                         QStringLiteral("Goals per minute vs club average")));
+    addColumn(ColumnData(Skater::ASSISTS_PER_MINUTE_VS_CLUB_AVERAGE,
+                         QStringLiteral("A/min vs club avg"),
+                         QStringLiteral("Assists per minute vs club average")));
+    addColumn(ColumnData(Skater::PIM_PER_MINUTE_VS_CLUB_AVERAGE,
+                         QStringLiteral("PIM/min vs club avg"),
+                         QStringLiteral("PIM per minute vs club avg vs club average")));
+    addColumn(ColumnData(Skater::SHOTS_ON_GOAL_PER_MINUTE_VS_CLUB_AVERAGE,
+                         QStringLiteral("SOG/min vs club avg"),
+                         QStringLiteral("Shots on goal per minute vs club average")));
+    addColumn(ColumnData(Skater::SHOTS_BLOCKED_PER_MINUTE_VS_CLUB_AVERAGE,
+                         QStringLiteral("SB/min vs club avg"),
+                         QStringLiteral("Shots blocked per minute vs club average")));
+}
 
 /* ================== */
 /*      File i/o      */
@@ -42,213 +155,6 @@ void SkaterContainer::writeToSpreadsheet(QXlsx::Document &xlsx, const std::share
     for (const auto &itr : data_)
         if (itr.club() == club)
             itr.write(xlsx, row++);
-}
-
-/* =========================== */
-/*      Get Data: Columns      */
-/* =========================== */
-
-qint32 SkaterContainer::columnEndPos() const
-{
-    return Skater::DATA_COLUMNS_END_POS;
-}
-
-QString SkaterContainer::columnDescription(const qint32 column) const
-{
-    switch (column) {
-    case Skater::NAME:
-        return QStringLiteral("Player name");
-    case Skater::CLUB:
-        return QStringLiteral("Club");
-    case Skater::POS:
-        return QStringLiteral("Position");
-    case Skater::GP:
-        return QStringLiteral("Games played");
-    case Skater::G:
-        return QStringLiteral("Goals");
-    case Skater::A:
-        return QStringLiteral("Assists");
-    case Skater::PTS:
-        return QStringLiteral("Points");
-    case Skater::PLUS_MINUS:
-        return QStringLiteral("Plus/minus");
-    case Skater::PIM:
-        return QStringLiteral("Penalties in minutes");
-    case Skater::PPG:
-        return QStringLiteral("Powerplay goals");
-    case Skater::PPA:
-        return QStringLiteral("Powerplay assists");
-    case Skater::PPP:
-        return QStringLiteral("Powerplay points");
-    case Skater::SHG:
-        return QStringLiteral("Shorthanded goals");
-    case Skater::SHA:
-        return QStringLiteral("Shorthanded assists");
-    case Skater::SHP:
-        return QStringLiteral("Shorthanded points");
-    case Skater::GWG:
-        return QStringLiteral("Game winning goals");
-    case Skater::GT:
-        return QStringLiteral("Game tying goals");
-    case Skater::FG:
-        return QStringLiteral("First goals");
-    case Skater::EN:
-        return QStringLiteral("Empty net goals");
-    case Skater::SOG:
-        return QStringLiteral("Shots on goal");
-    case Skater::SH:
-        return QStringLiteral("Shooting percentage");
-    case Skater::HT:
-        return QStringLiteral("Hits given");
-    case Skater::GA:
-        return QStringLiteral("Giveaways");
-    case Skater::TA:
-        return QStringLiteral("Takeaways");
-    case Skater::FO:
-        return QStringLiteral("Faceoff percentage");
-    case Skater::SB:
-        return QStringLiteral("Shots blocked");
-    case Skater::TWO_MIN_PEN:
-        return QStringLiteral("Minor penalties");
-    case Skater::FIVE_MIN_PEN:
-        return QStringLiteral("Major penalties");
-    case Skater::MI:
-        return QStringLiteral("Misconduct penalties");
-    case Skater::MA:
-        return QStringLiteral("Match penalties");
-    case Skater::GM:
-        return QStringLiteral("Game misconduct penalties");
-    case Skater::FI:
-        return QStringLiteral("Fights");
-    case Skater::FW:
-        return QStringLiteral("Fights won");
-    case Skater::TTOI:
-        return QStringLiteral("Total time on ice");
-    case Skater::ATOI:
-        return QStringLiteral("Average time on ice");
-    case Skater::APPT:
-        return QStringLiteral("Average powerplay time on ice");
-    case Skater::APKT:
-        return QStringLiteral("Average penalty kill time on ice");
-    case Skater::PLUS:
-        return QStringLiteral("Plus (on ice goals for)");
-    case Skater::MINUS:
-        return QStringLiteral("Minus (on ice goals against)");
-    case Skater::FS:
-        return QStringLiteral("First star");
-    case Skater::GOALS_PER_MINUTE:
-        return QStringLiteral("Goals per minute");
-    case Skater::ASSISTS_PER_MINUTE:
-        return QStringLiteral("Assists per minute");
-    case Skater::PIM_PER_MINUTE:
-        return QStringLiteral("PIM per minute");
-    case Skater::SHOTS_ON_GOAL_PER_MINUTE:
-        return QStringLiteral("Shots on goal per minute");
-    case Skater::SHOTS_BLOCKED_PER_MINUTE:
-        return QStringLiteral("Shots blocked per minute");
-    default:
-        return QStringLiteral("*NO NAME*");
-    }
-}
-
-QString SkaterContainer::columnName(const qint32 column) const
-{
-    switch (column) {
-    case Skater::NAME:
-        return QStringLiteral("Name");
-    case Skater::CLUB:
-        return QStringLiteral("Club");
-    case Skater::POS:
-        return QStringLiteral("Pos");
-    case Skater::GP:
-        return QStringLiteral("GP");
-    case Skater::G:
-        return QStringLiteral("G");
-    case Skater::A:
-        return QStringLiteral("A");
-    case Skater::PTS:
-        return QStringLiteral("Pts");
-    case Skater::PLUS_MINUS:
-        return QStringLiteral("'+/-");
-    case Skater::PIM:
-        return QStringLiteral("PIM");
-    case Skater::PPG:
-        return QStringLiteral("PP G");
-    case Skater::PPA:
-        return QStringLiteral("PP A");
-    case Skater::PPP:
-        return QStringLiteral("PP Pts");
-    case Skater::SHG:
-        return QStringLiteral("SH G");
-    case Skater::SHA:
-        return QStringLiteral("SH A");
-    case Skater::SHP:
-        return QStringLiteral("SH Pts");
-    case Skater::GWG:
-        return QStringLiteral("GWG");
-    case Skater::GT:
-        return QStringLiteral("GT");
-    case Skater::FG:
-        return QStringLiteral("FG");
-    case Skater::EN:
-        return QStringLiteral("EN");
-    case Skater::SOG:
-        return QStringLiteral("SOG");
-    case Skater::SH:
-        return QStringLiteral("Sh%");
-    case Skater::HT:
-        return QStringLiteral("HT");
-    case Skater::GA:
-        return QStringLiteral("GA");
-    case Skater::TA:
-        return QStringLiteral("TA");
-    case Skater::FO:
-        return QStringLiteral("FO%");
-    case Skater::SB:
-        return QStringLiteral("SB");
-    case Skater::TWO_MIN_PEN:
-        return QStringLiteral("2 MIN");
-    case Skater::FIVE_MIN_PEN:
-        return QStringLiteral("5 MIN");
-    case Skater::MI:
-        return QStringLiteral("Mi");
-    case Skater::MA:
-        return QStringLiteral("Ma");
-    case Skater::GM:
-        return QStringLiteral("GM");
-    case Skater::FI:
-        return QStringLiteral("FI");
-    case Skater::FW:
-        return QStringLiteral("FW");
-    case Skater::TTOI:
-        return QStringLiteral("TTOI");
-    case Skater::ATOI:
-        return QStringLiteral("ATOI");
-    case Skater::APPT:
-        return QStringLiteral("APPT");
-    case Skater::APKT:
-        return QStringLiteral("APKT");
-    case Skater::PLUS:
-        return QStringLiteral("'+");
-    case Skater::MINUS:
-        return QStringLiteral("'-");
-    case Skater::FS:
-        return QStringLiteral("FS");
-    case Skater::AVG_RATING:
-        return QStringLiteral("Av R");
-    case Skater::GOALS_PER_MINUTE:
-        return QStringLiteral("G/min");
-    case Skater::ASSISTS_PER_MINUTE:
-        return QStringLiteral("A/min");
-    case Skater::PIM_PER_MINUTE:
-        return QStringLiteral("PIM/min");
-    case Skater::SHOTS_ON_GOAL_PER_MINUTE:
-        return QStringLiteral("SOG/min");
-    case Skater::SHOTS_BLOCKED_PER_MINUTE:
-        return QStringLiteral("SB/min");
-    default:
-        return QStringLiteral("*NO NAME*");
-    }
 }
 
 /* ==================== */

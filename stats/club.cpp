@@ -96,6 +96,22 @@ qint16 Club::overtimeAndShootoutLosses() const
     return games_played_ - won_ - lost_ - tied_;
 }
 
+double Club::skaterAverage(const qint32 skater_column, const bool is_defenceman) const
+{
+    if (is_defenceman)
+        return defencemen_totals_->average(skater_column);
+
+    return forward_totals_->average(skater_column);
+}
+
+double Club::skaterAveragePerMinute(const qint32 skater_column, const bool is_defenceman) const
+{
+    if (is_defenceman)
+        return defencemen_totals_->averagePerMinute(skater_column);
+
+    return forward_totals_->averagePerMinute(skater_column);
+}
+
 /* ==================== */
 /*      Parse Data      */
 /* ==================== */

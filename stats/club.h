@@ -12,36 +12,82 @@ class QVariant;
 namespace stats {
 class Skater;
 
-/*! The Club class contains statistics for a club */
+/*!
+ * \brief The Club class contains statistics for a club
+ */
 class Club : public SchemaBaseClass
 {
 public:
-    /*! Constructor */
     Club();
 
-    //! Add stats */
-    /*! Add skater stats to the club totals and averages */
+    // Add stats
+    /*!
+     * \brief Adds skater stats to the club totals and averages
+     * \param player Skater to be added to the totals and averages
+     */
     void add(const Skater *player);
 
-    //! Get data
-    /*! Get column end position */
+    // Get data
     inline qint32 columnEndPos() const override { return DATA_COLUMNS_END_POS; }
 
-    //! Get stats */
+    // Get stats
     QVariant get(const qint32 column) const override;
+    /*!
+     * \brief Returns goal difference
+     * \return goal difference
+     */
     inline qint16 goalDifference() const { return goals_for_ - goals_against_; }
+    /*!
+     * \brief Returns overtime / shoot-out losses
+     * \return overtime / shoot-out losses
+     */
     qint16 overtimeAndShootoutLosses() const;
+    /*!
+     * \brief Returns the average for the club's skaters
+     * \param skater_column Skater column id
+     * \param is_defenceman `true` = defenceman / `false` = forward
+     * \return average statistic for the club's skaters
+     */
+    double skaterAverage(const qint32 skater_column, const bool is_defenceman) const;
+    /*!
+     * \brief Returns the average per minute for the club's skaters
+     * \param skater_column Skater column id
+     * \param is_defenceman `true` = defenceman / `false` = forward
+     * \return average statistic per minute for the club's skaters 
+     */
+    double skaterAveragePerMinute(const qint32 skater_column, const bool is_defenceman) const;
 
-    //! Parse data */
-    /*! Parse club stats from a line of a text file */
+    // Parse data
+    /*!
+     * \brief Parses club stats from a line of a text file
+     * \param line Input line from a text file
+     * \return 
+     */
     bool parse(QString &line);
 
-    //! Sort data */
+    // Sort data
     /*! Sort two Club items */
+    /*!
+     * \brief Sorts two clubs alphabetically by name
+     * \param lhs Club 1
+     * \param rhs Club 2
+     * \return whether club 1 < club 2
+     */
     static bool sortByName(const std::shared_ptr<Club> &lhs, const std::shared_ptr<Club> &rhs);
+    /*!
+     * \brief Sorts two clubs by performance for league tables
+     * \param lhs Club 1
+     * \param rhs Club 2
+     * \return whether club 1 is better than club 2 (i.e. club 1 < club 2)
+     */
     static bool sortByPerformance(const std::shared_ptr<Club> &lhs,
                                   const std::shared_ptr<Club> &rhs);
 
+    /*!
+     * \brief The ENUM_STATS_COLUMNS enum sets out the column ids for the Club class
+     * \details Changing the order of the enum values will change the order of the columns
+     * output to the spreadsheet.
+     */
     enum ENUM_STATS_COLUMNS {
         // Club stats
         NAME = first_column_id_,
@@ -54,14 +100,14 @@ public:
         GF,
         GA,
         PTS,
-        // Defencemen
+        // Averages: defencemen
         DEF_TTOI,
         DEF_AVERAGE_GOALS_PER_MINUTE,
         DEF_AVERAGE_ASSISTS_PER_MINUTE,
         DEF_AVERAGE_PIM_PER_MINUTE,
         DEF_AVERAGE_SHOTS_ON_GOAL_PER_MINUTE,
         DEF_AVERAGE_SHOTS_BLOCKED_PER_MINUTE,
-        // Forwards
+        // Averages: forwards
         FWD_TTOI,
         FWD_AVERAGE_GOALS_PER_MINUTE,
         FWD_AVERAGE_ASSISTS_PER_MINUTE,

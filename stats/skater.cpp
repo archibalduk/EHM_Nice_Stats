@@ -118,9 +118,7 @@ void Skater::add(const qint32 column, const QVariant &value)
         fw_ += static_cast<quint16>(value.toInt());
         break;
     case ATOI:
-        //qInfo() << atoi_.toDecimal() << "+" << value;
         atoi_.add(value);
-        //qInfo() << atoi_.toDecimal() << "\n";
         break;
     case APPT:
         appt_.add(value);
@@ -244,6 +242,16 @@ QVariant Skater::get(const qint32 column) const
         return getPerMinute(SOG);
     case SHOTS_BLOCKED_PER_MINUTE:
         return getPerMinute(SB);
+    case GOALS_PER_MINUTE_VS_CLUB_AVERAGE:
+        return getPerMinuteAgainstClubAverage(G);
+    case ASSISTS_PER_MINUTE_VS_CLUB_AVERAGE:
+        return getPerMinuteAgainstClubAverage(A);
+    case PIM_PER_MINUTE_VS_CLUB_AVERAGE:
+        return getPerMinuteAgainstClubAverage(PIM);
+    case SHOTS_ON_GOAL_PER_MINUTE_VS_CLUB_AVERAGE:
+        return getPerMinuteAgainstClubAverage(SOG);
+    case SHOTS_BLOCKED_PER_MINUTE_VS_CLUB_AVERAGE:
+        return getPerMinuteAgainstClubAverage(SB);
     default:
         return 0;
     };
@@ -258,6 +266,16 @@ double Skater::getPerMinute(const qint32 column) const
         return value;
 
     return value / ttoi().toDecimal();
+}
+
+//! Skater's statistic plus or minus the club average */
+double Skater::getPerMinuteAgainstClubAverage(const qint32 column) const
+{
+    const auto c{club()};
+    if (!c)
+        return 0;
+
+    return getPerMinute(column) - c->skaterAveragePerMinute(column, isDefenceman());
 }
 
 //! Total time on ice */

@@ -1,9 +1,17 @@
 #include "ice_time.h"
 
+// Application headers
+#include "../settings.h"
+
 // Qt headers
 #include <QList>
 #include <QString>
 #include <QTime>
+
+using namespace stats;
+
+// --- Static data --- //
+qint8 IceTime::time_format_setting_{Settings::TIME_FORMAT_HH_MM_SS};
 
 /* ================== */
 /*      Ice Time      */
@@ -24,8 +32,10 @@ IceTime::IceTime(const quint16 minutes, const quint16 seconds)
 
 QVariant IceTime::get() const
 {
+    if (time_format_setting_ == Settings::TIME_FORMAT_HH_MM_SS)
+        return toTime();
+
     return toDecimal();
-    //return toTime();
 }
 
 double IceTime::toDecimal() const
@@ -96,4 +106,16 @@ void IceTime::parse(const QString &mm_ss_string)
         return;
 
     add(time[MINUTES].toUInt(), time[SECONDS].toUInt());
+}
+
+/* ================== */
+/*      Settings      */
+/* ================== */
+
+void IceTime::setTimeFormat(const qint8 format)
+{
+    if (format == Settings::TIME_FORMAT_DECIMAL)
+        time_format_setting_ = format;
+    else // Default to hh:mm:ss if `format` is an invalid setting value
+        time_format_setting_ = Settings::TIME_FORMAT_HH_MM_SS;
 }
