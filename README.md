@@ -1,5 +1,5 @@
 # Nice Stats for Eastside Hockey Manager
-![GitHub last commit](https://img.shields.io/github/last-commit/archibalduk/EHM_Nice_Stats?style=flat-square) ![GitHub](https://img.shields.io/github/license/archibalduk/EHM_Nice_Stats?style=flat-square) ![GitHub top language](https://img.shields.io/github/languages/top/archibalduk/EHM_Nice_Stats?style=flat-square)
+![GitHub last commit](https://img.shields.io/github/last-commit/archibalduk/EHM_Nice_Stats?style=flat) ![GitHub](https://img.shields.io/github/license/archibalduk/EHM_Nice_Stats?style=flat) ![GitHub top language](https://img.shields.io/github/languages/top/archibalduk/EHM_Nice_Stats?style=flat)
 
 :rocket: Nicely presented player statistics for Eastside Hockey Manager saved games saved to a simple Excel spreadsheet. 
 
