@@ -12,8 +12,8 @@
  - Load your saved game in EHM;
  - Navigate to the league standings screen for the league of your choice;
  - Near the top right corner of the screen there is an `Actions` button. Click on this and then each of the following:
-  - `Print` -> `All` and save this to a folder of your choice. This is your `League Standings` file; and
-  - `Export (csv)` -> `All player stats` and save this to a folder of your choice. This is your `Player Statistics` file;
+   - `Print` -> `All` and save this to a folder of your choice. This is your `League Standings` file; and
+   - `Export (csv)` -> `All player stats` and save this to a folder of your choice. This is your `Player Statistics` file;
  - Load the Nice Stats app and select the `League Standings` and `Player Statistics` files you saved per the previous step; and
  - Choose where to save your spreadsheet in the `Save As` setting and then click`Generate`.
 
